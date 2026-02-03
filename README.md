@@ -13,6 +13,38 @@ This project implements an **end-to-end, event-driven incremental data ingestion
 * **Orchestration:** AWS Step Functions
 * **Eventing & Alerts:** Amazon EventBridge, Amazon SNS
 
+## Architecture
+
+The architecture illustrates the **end-to-end airline data ingestion pipeline** using AWS services:
+
+1. **Data Ingestion Layer:**  
+   - Airport codes (reference data) and daily flight data are uploaded to Amazon S3.  
+You can see the sample files in the repo:
+    - [Airport Codes CSV]([data/airport_codes.csv](https://github.com/Mahesh-moco/Airline-Data-Ingestion-Incremental-Data-Pipeline-AWS-/blob/main/Data/airports_codes.csv))  
+    - [Daily Flights CSV]([data/daily_flights_20250120.csv](https://github.com/Mahesh-moco/Airline-Data-Ingestion-Incremental-Data-Pipeline-AWS-/blob/main/Data/flights_part_1.csv))
+2. **Metadata & Schema Management:**  
+   - **AWS Glue Crawlers** automatically discover schemas and register tables in the **Glue Data Catalog** for S3 and Redshift.
+
+3. **Data Processing Layer:**  
+   - AWS Glue ETL jobs, created via **Glue Studio GUI**, process daily flight data incrementally using **Job Bookmarking**.
+   - Redshift has a pre-loaded airport codes table, while daily flight data is processed incrementally and stored temporarily; a flight fact table is planned for the future.
+   - [AWS Glue ETL jobs](https://github.com/Mahesh-moco/Airline-Data-Ingestion-Incremental-Data-Pipeline-AWS-/blob/main/glue_etl_job.py)
+   - [Redshift Create Table Command](https://github.com/Mahesh-moco/Airline-Data-Ingestion-Incremental-Data-Pipeline-AWS-/blob/main/redshift_create_table_commands.txt)
+
+
+4. **Orchestration Layer:**  
+   - **AWS Step Functions** orchestrate the pipeline execution.
+   - **Amazon EventBridge** triggers the Step Function based on schedule or events.
+   - [AWS Step Functions Config](https://github.com/Mahesh-moco/Airline-Data-Ingestion-Incremental-Data-Pipeline-AWS-/blob/main/step_function_config.json)
+   - [AWS Step Functions Flow](https://github.com/Mahesh-moco/Airline-Data-Ingestion-Incremental-Data-Pipeline-AWS-/blob/main/Screenshot%202026-02-03%20144142.png)
+   - [Amazon EventBridge Rule](https://github.com/Mahesh-moco/Airline-Data-Ingestion-Incremental-Data-Pipeline-AWS-/blob/main/event_bridge_rule.json)
+
+5. **Monitoring & Notifications:**  
+   - **Amazon SNS** sends notifications for job success or failure, enabling real-time monitoring.
+
+![Project Architecture](https://github.com/Mahesh-moco/Airline-Data-Ingestion-Incremental-Data-Pipeline-AWS-/blob/main/airline%20arhitecture%20flow.png)
+
+
 ## Data Flow
 
 1. **Data Ingestion:** Airport codes (static) and daily flight data are ingested into Amazon S3.
