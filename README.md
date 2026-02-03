@@ -49,7 +49,7 @@ You can see the sample files in the repo:
 
 1. **Data Ingestion:** Airport codes (static) and daily flight data are ingested into Amazon S3.
 2. **Schema Discovery:** AWS Glue Crawlers automatically infer schemas and register tables in the Glue Data Catalog for S3 and Redshift.
-3. **Target Setup:** Pre-loaded airport codes dimension table and flight  table schema are created in Amazon Redshift.
+3. **Pre-loaded airport** codes dimension table and flight table schema are created in Amazon Redshift.
 4. **Incremental Processing:** AWS Glue ETL job processes only new flight data using **Glue Job Bookmarking** to ensure idempotent loads.
 5. **Orchestration:** AWS Step Functions orchestrate the workflow execution.
 6. **Triggering:** Amazon EventBridge triggers the Step Function on schedule or events.
